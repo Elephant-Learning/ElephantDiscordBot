@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.function.Function;
 
-import io.github.overlordsiii.Main;
+import me.elephantsuite.Main;
 
 public class PropertiesHandler {
 
@@ -49,7 +49,7 @@ public class PropertiesHandler {
 		}
 	}
 
-	public PropertiesHandler initialize() {
+	public void initialize() {
 		try {
 			load();
 			save();
@@ -58,7 +58,6 @@ public class PropertiesHandler {
 			e.printStackTrace();
 		}
 
-		return this;
 	}
 
 	public void load() throws IOException {
@@ -84,7 +83,7 @@ public class PropertiesHandler {
 
 		Properties properties = new Properties();
 
-		configValues.forEach(properties::put);
+		properties.putAll(configValues);
 
 		properties.store(Files.newOutputStream(propertiesPath), "This stores the configuration properties for the quotebook bot");
 
@@ -103,13 +102,17 @@ public class PropertiesHandler {
 			save();
 			load();
 		} catch (IOException e) {
-			Main.LOGGER.error("Error while initializing Properties Config for file " + "\"" + propertiesPath + "\"" + " for Guild " + "\"" + configValues.get("name") + "\"" + "!");
+			Main.LOGGER.error("Error while initializing Properties Config for file " + "\"" + propertiesPath + "\"!");
 			e.printStackTrace();
 		}
 	}
 
 	public <T> T getConfigOption(String key, Function<String, T> parser) {
 		return parser.apply(configValues.get(key));
+	}
+
+	public String getConfigOption(String key) {
+		return configValues.get(key);
 	}
 
 	public boolean hasConfigOption(String key) {
