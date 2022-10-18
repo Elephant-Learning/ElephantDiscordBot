@@ -1,11 +1,13 @@
 package me.elephantsuite;
 
+import me.elephantsuite.commands.UserCountCommand;
 import me.elephantsuite.config.PropertiesHandler;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.hooks.AnnotatedEventManager;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -40,12 +42,16 @@ public class Main {
         JDA = JDABuilder
                 .createDefault(PRIVATE_CONFIG.getConfigOption("token"))
                 .setEventManager(new AnnotatedEventManager())
+                .addEventListeners(new UserCountCommand())
                 .setActivity(Activity.of(CONFIG.getConfigOption("activityType", Activity.ActivityType::valueOf), CONFIG.getConfigOption("activityText")))
                 .setStatus(CONFIG.getConfigOption("statusType", OnlineStatus::valueOf))
                 .build();
 
         if (CONFIG.getConfigOption("developmentMode", Boolean::valueOf)) {
             JDA.getGuilds().forEach(g -> {
+                g.updateCommands()
+                        .addCommands(Commands.slash("user-count", "Gets the amount of users using elephant"))
+                        .queue();
                 //TODO Add slash commands to register for guilds only (much faster)
                 //see https://github.com/OverlordsIII/QuotebookBot/blob/master/src/main/java/io/github/overlordsiii/Main.java#L68
             });
