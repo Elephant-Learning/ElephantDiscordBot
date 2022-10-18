@@ -38,7 +38,7 @@ public class Request {
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .method(method.name(), JsonUtils.toBody(body))
-                .uri(URI.create(BACKEND_PATH + "/" + this.path))
+                .uri(URI.create(BACKEND_PATH + this.path))
                 .build();
 
         HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());

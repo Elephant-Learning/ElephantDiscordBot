@@ -22,6 +22,7 @@ public class Main {
             .builder()
             .addConfigOption("token", "")
             .addConfigOption("elephantBackendDomain", "")
+            .setFileName("elephant-discord-private-config")
             .build();
 
     public static final PropertiesHandler CONFIG = PropertiesHandler
@@ -31,6 +32,7 @@ public class Main {
             .addConfigOption("activityText", "Helping People Memorize")
             .addConfigOption("createdCommands", "false")
             .addConfigOption("developmentMode", "true")
+            .setFileName("elephant-discord-bot")
             .build();
 
     //TODO Add JSON User configs
@@ -48,10 +50,11 @@ public class Main {
                 .build();
 
         if (CONFIG.getConfigOption("developmentMode", Boolean::valueOf)) {
-            JDA.getGuilds().forEach(g -> {
+            JDA.awaitReady().getGuilds().forEach(g -> {
                 g.updateCommands()
                         .addCommands(Commands.slash("user-count", "Gets the amount of users using elephant"))
                         .queue();
+                System.out.println("Created dev commands for guild " + g.getName());
                 //TODO Add slash commands to register for guilds only (much faster)
                 //see https://github.com/OverlordsIII/QuotebookBot/blob/master/src/main/java/io/github/overlordsiii/Main.java#L68
             });
