@@ -58,7 +58,7 @@ public class Main {
                         .addCommands(Commands.slash("deck-count", "Gets the amount of decks in elephant"))
                         .addCommands(Commands.slash("rank-deck", "Ranks the top 10 liked decks in elephant"))
                         .queue();
-                System.out.println("Created dev commands for guild " + g.getName());
+                LOGGER.info("Created dev commands for guild " + g.getName());
                 //TODO Add slash commands to register for guilds only (much faster)
                 //see https://github.com/OverlordsIII/QuotebookBot/blob/master/src/main/java/io/github/overlordsiii/Main.java#L68
             });

@@ -43,8 +43,20 @@ public class Request {
 
         HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
 
+        Main.LOGGER.info("Made " + this.method.name() + " request to " + BACKEND_PATH + this.path + " with body: " + JsonUtils.objToString(this.body));
+
         return JsonUtils.toJsonObj(response.body());
     }
 
+    public JsonObject getBody() {
+        return body;
+    }
 
+    public String getPath() {
+        return path;
+    }
+
+    public Method getMethod() {
+        return method;
+    }
 }

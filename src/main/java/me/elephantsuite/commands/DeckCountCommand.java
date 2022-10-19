@@ -21,13 +21,16 @@ public class DeckCountCommand {
             return;
         }
 
+        event.deferReply().queue();
+
+
         Request request = new Request("deck/getAll", Method.GET, null);
 
         JsonObject object = request.makeRequest();
 
         int decks = object.get("context").getAsJsonObject().get("decks").getAsJsonArray().size();
 
-        event.reply("Elephant currently has `" + decks + "` decks in use.").queue();
+        event.getHook().editOriginal("Elephant currently has `" + decks + "` decks in use.").queue();
 
     }
 }

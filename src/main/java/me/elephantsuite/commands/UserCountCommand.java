@@ -23,6 +23,8 @@ public class UserCountCommand {
             return;
         }
 
+        event.deferReply().queue();
+
         Request request = new Request("login/userByName?name=&userId=1", Method.GET, null);
 
         JsonObject obj = request.makeRequest();
@@ -31,6 +33,6 @@ public class UserCountCommand {
 
         JsonArray users = ctx.get("users").getAsJsonArray();
 
-        event.reply("Elephant currently has `" + users.size() + "` users.").queue();
+        event.getHook().editOriginal("Elephant currently has `" + users.size() + "` users.").queue();
     }
 }
