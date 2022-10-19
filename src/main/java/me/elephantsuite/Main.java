@@ -5,6 +5,7 @@ import me.elephantsuite.commands.RankDeckCommand;
 import me.elephantsuite.commands.RankSongCommand;
 import me.elephantsuite.commands.UserCountCommand;
 import me.elephantsuite.commands.WebsiteCommand;
+import me.elephantsuite.config.JsonConfigHandler;
 import me.elephantsuite.config.PropertiesHandler;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -40,7 +41,10 @@ public class Main {
             .build();
 
     //TODO Add JSON User configs
-    public static final Map<String, PropertiesHandler> SERVER_CONFIG_LISTS = new HashMap<>();
+   // public static final Map<String, PropertiesHandler> SERVER_CONFIG_LISTS = new HashMap<>();
+    // not needed right now, uncomment for later possibly
+
+    public static final Map<String, JsonConfigHandler> USER_CONFIG_LISTS = new HashMap<>();
 
     public static JDA JDA;
 
@@ -75,6 +79,9 @@ public class Main {
             CONFIG.reload();
         }
 
+        // doesn't seem like this is needed for right now
+        /*
+
         JDA.awaitReady().getGuilds().forEach(guild -> {
             if (!SERVER_CONFIG_LISTS.containsKey(guild.getId())) {
 
@@ -89,5 +96,6 @@ public class Main {
                 );
             }
         });
+         */
     }
 }
