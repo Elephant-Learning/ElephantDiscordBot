@@ -2,6 +2,7 @@ package me.elephantsuite;
 
 import me.elephantsuite.commands.DeckCountCommand;
 import me.elephantsuite.commands.RankDeckCommand;
+import me.elephantsuite.commands.RankSongCommand;
 import me.elephantsuite.commands.UserCountCommand;
 import me.elephantsuite.commands.WebsiteCommand;
 import me.elephantsuite.config.PropertiesHandler;
@@ -47,7 +48,7 @@ public class Main {
         JDA = JDABuilder
                 .createDefault(PRIVATE_CONFIG.getConfigOption("token"))
                 .setEventManager(new AnnotatedEventManager())
-                .addEventListeners(new UserCountCommand(), new DeckCountCommand(), new RankDeckCommand(), new WebsiteCommand())
+                .addEventListeners(new UserCountCommand(), new DeckCountCommand(), new RankDeckCommand(), new WebsiteCommand(), new RankSongCommand())
                 .setActivity(Activity.of(CONFIG.getConfigOption("activityType", Activity.ActivityType::valueOf), CONFIG.getConfigOption("activityText")))
                 .setStatus(CONFIG.getConfigOption("statusType", OnlineStatus::valueOf))
                 .build();
@@ -58,6 +59,7 @@ public class Main {
                     .addCommands(Commands.slash("user-count", "Gets the amount of users using elephant"))
                     .addCommands(Commands.slash("deck-count", "Gets the amount of decks in elephant"))
                     .addCommands(Commands.slash("rank-deck", "Ranks the top 10 liked decks in elephant"))
+                    .addCommands(Commands.slash("rank-song", "Ranks songs in Elephant based on like total"))
                     .addCommands(Commands.slash("website", "Gives link to elephant website"))
                     .queue();
                 LOGGER.info("Created dev commands for guild " + g.getName());
