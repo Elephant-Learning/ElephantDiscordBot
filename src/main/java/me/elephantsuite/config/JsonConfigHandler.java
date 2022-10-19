@@ -13,12 +13,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import me.elephantsuite.Main;
+import me.elephantsuite.util.JsonUtils;
 
 public class JsonConfigHandler {
 
 	private final Path configFilePath;
 
-	private final Map<String, Long> USER_ID_TO_ELEPHANT_ID = new HashMap<>();
+	private Map<String, Long> USER_ID_TO_ELEPHANT_ID = new HashMap<>();
 
 
 	public JsonConfigHandler(String guildID) {
@@ -28,16 +29,30 @@ public class JsonConfigHandler {
 			try {
 				Files.createDirectories(configFilePath.getParent());
 			} catch (IOException e) {
-				Main.LOGGER.error("Error while initializing Server Config for server \"" + guildID  + "\"!");
+				Main.LOGGER.error("Error while initializing Server Config for server \"" + guildID + "\"!");
 				e.printStackTrace();
 			}
 		}
 	}
 
-	public void save() {
-		JsonArray array = new JsonArray();
-		USER_ID_TO_ELEPHANT_ID.forEach((s, aLong) -> {
-		});
+	public void save() throws IOException {
+		JsonObject obj = new JsonObject();
+		USER_ID_TO_ELEPHANT_ID.forEach(obj::addProperty);
+		String file = JsonUtils.GSON.toJson(obj);
+
+		Files.writeString(configFilePath, file);
+	}
+
+	public void load() throws IOException {
+		if (!Files.exists(configFilePath)) {
+			return;
+		}
+
+		String file = Files.readString(configFilePath);
+
+		JsonObject obj = JsonUtils.GSON.fromJson(file, JsonObject.class);
+
+		this.USER_ID_TO_ELEPHANT_ID = JsonUtils.GSON.fromJson(obj, Map.class);
 	}
 
 	public void initialize() {
@@ -50,6 +65,22 @@ public class JsonConfigHandler {
 		}
 	}
 
+	public long getElephantId(String discordId) {
+		return USER_ID_TO_ELEPHANT_ID.get(discordId);
+	}
+
+	public long getElephantId(long discordId) {
+		return getElephantId(String.valueOf(discordId));
+	}
+
+	public void addElephantDiscordUser(String userId, long elephantId) {
+		this.USER_ID_TO_ELEPHANT_ID.put(userId, elephantId);
+	}
+
+	public void addElephantDiscordUser(long userId, long elephantId) {
+		addElephantDiscordUser(String.valueOf(userId), elephantId);
+	}
+
 	public void reload() {
 		try {
 			save();
@@ -60,4 +91,5 @@ public class JsonConfigHandler {
 		}
 
 
+	}
 }

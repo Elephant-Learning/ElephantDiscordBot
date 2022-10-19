@@ -1,5 +1,8 @@
 package me.elephantsuite;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import me.elephantsuite.commands.DeckCountCommand;
 import me.elephantsuite.commands.RankDeckCommand;
 import me.elephantsuite.commands.RankSongCommand;
@@ -7,11 +10,13 @@ import me.elephantsuite.commands.UserCountCommand;
 import me.elephantsuite.commands.WebsiteCommand;
 import me.elephantsuite.config.JsonConfigHandler;
 import me.elephantsuite.config.PropertiesHandler;
+import me.elephantsuite.util.JsonUtils;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.hooks.AnnotatedEventManager;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -65,6 +70,9 @@ public class Main {
                     .addCommands(Commands.slash("rank-deck", "Ranks the top 10 liked decks in elephant"))
                     .addCommands(Commands.slash("rank-song", "Ranks songs in Elephant based on like total"))
                     .addCommands(Commands.slash("website", "Gives link to elephant website"))
+                    .addCommands(Commands.slash("verify", "Verifies your discord account to your elephant account")
+                        .addOption(OptionType.STRING, "email", "Your email that you used to register for elephant")
+                        .addOption(OptionType.STRING, "password", "Your password that you used to register for elephant"))
                     .queue();
                 LOGGER.info("Created dev commands for guild " + g.getName());
                 //TODO Add slash commands to register for guilds only (much faster)
@@ -79,23 +87,31 @@ public class Main {
             CONFIG.reload();
         }
 
-        // doesn't seem like this is needed for right now
-        /*
+
 
         JDA.awaitReady().getGuilds().forEach(guild -> {
+            if (!USER_CONFIG_LISTS.containsKey(guild.getId())) {
+                JsonConfigHandler handler = new JsonConfigHandler(guild.getId());
+                handler.initialize();
+                USER_CONFIG_LISTS.put(guild.getId(), handler);
+            }
+
+
+            // doesn't seem like this is needed for right now
+            /*
             if (!SERVER_CONFIG_LISTS.containsKey(guild.getId())) {
 
                 SERVER_CONFIG_LISTS.put(guild.getId(), PropertiesHandler
                         .builder()
                         .serverConfig()
                         .setFileName(guild.getId() + ".properties")
-                        //TODO Add guild config values when needed
                         //for sanity
                         .addConfigOption("name", guild.getName())
                         .build()
                 );
             }
+             */
         });
-         */
+
     }
 }
