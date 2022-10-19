@@ -1,5 +1,7 @@
 package me.elephantsuite;
 
+import me.elephantsuite.commands.DeckCountCommand;
+import me.elephantsuite.commands.RankDeckCommand;
 import me.elephantsuite.commands.UserCountCommand;
 import me.elephantsuite.config.PropertiesHandler;
 import net.dv8tion.jda.api.JDA;
@@ -44,7 +46,7 @@ public class Main {
         JDA = JDABuilder
                 .createDefault(PRIVATE_CONFIG.getConfigOption("token"))
                 .setEventManager(new AnnotatedEventManager())
-                .addEventListeners(new UserCountCommand())
+                .addEventListeners(new UserCountCommand(), new DeckCountCommand(), new RankDeckCommand())
                 .setActivity(Activity.of(CONFIG.getConfigOption("activityType", Activity.ActivityType::valueOf), CONFIG.getConfigOption("activityText")))
                 .setStatus(CONFIG.getConfigOption("statusType", OnlineStatus::valueOf))
                 .build();
@@ -53,6 +55,8 @@ public class Main {
             JDA.awaitReady().getGuilds().forEach(g -> {
                 g.updateCommands()
                         .addCommands(Commands.slash("user-count", "Gets the amount of users using elephant"))
+                        .addCommands(Commands.slash("deck-count", "Gets the amount of decks in elephant"))
+                        .addCommands(Commands.slash("rank-deck", "Ranks the top 10 liked decks in elephant"))
                         .queue();
                 System.out.println("Created dev commands for guild " + g.getName());
                 //TODO Add slash commands to register for guilds only (much faster)
