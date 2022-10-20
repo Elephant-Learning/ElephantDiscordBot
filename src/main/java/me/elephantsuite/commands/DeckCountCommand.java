@@ -3,6 +3,7 @@ package me.elephantsuite.commands;
 import com.google.gson.JsonObject;
 import me.elephantsuite.request.Method;
 import me.elephantsuite.request.Request;
+import me.elephantsuite.util.ResponseUtils;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.SubscribeEvent;
 
@@ -27,6 +28,11 @@ public class DeckCountCommand {
         Request request = new Request("deck/getAll", Method.GET, null);
 
         JsonObject object = request.makeRequest();
+
+        if (ResponseUtils.isFailure(object)) {
+            event.getHook().editOriginal("Failure getting all decks!: " + ResponseUtils.getMessage(object)).queue();
+            return;
+        }
 
         int decks = object.get("context").getAsJsonObject().get("decks").getAsJsonArray().size();
 

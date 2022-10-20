@@ -37,7 +37,9 @@ public class JsonConfigHandler {
 
 	public void save() throws IOException {
 		JsonObject obj = new JsonObject();
-		USER_ID_TO_ELEPHANT_ID.forEach(obj::addProperty);
+		USER_ID_TO_ELEPHANT_ID.forEach((s, aLong) -> {
+			obj.addProperty(s, aLong);
+		});
 		String file = JsonUtils.GSON.toJson(obj);
 
 		Files.writeString(configFilePath, file);
@@ -52,7 +54,9 @@ public class JsonConfigHandler {
 
 		JsonObject obj = JsonUtils.GSON.fromJson(file, JsonObject.class);
 
-		this.USER_ID_TO_ELEPHANT_ID = JsonUtils.GSON.fromJson(obj, Map.class);
+		obj.entrySet().forEach(stringJsonElementEntry -> {
+			this.USER_ID_TO_ELEPHANT_ID.put(stringJsonElementEntry.getKey(), stringJsonElementEntry.getValue().getAsLong());
+		});
 	}
 
 	public void initialize() {
@@ -75,6 +79,10 @@ public class JsonConfigHandler {
 
 	public void addElephantDiscordUser(String userId, long elephantId) {
 		this.USER_ID_TO_ELEPHANT_ID.put(userId, elephantId);
+	}
+
+	public boolean hasElephantId(long discordId) {
+		return this.USER_ID_TO_ELEPHANT_ID.get(String.valueOf(discordId)) != null;
 	}
 
 	public void addElephantDiscordUser(long userId, long elephantId) {

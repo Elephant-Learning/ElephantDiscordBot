@@ -47,8 +47,8 @@ public class Request {
         Main.LOGGER.info("Made " + this.method.name() + " request to " + BACKEND_PATH + this.path + " with body: " + JsonUtils.objToString(this.body));
 
         JsonObject responseObj = JsonUtils.toJsonObj(response.body());
-
-        Main.LOGGER.info("Response: " + JsonUtils.objToString(responseObj));
+        // uncomment when u need to debug
+      //  Main.LOGGER.info("Response: " + JsonUtils.objToString(responseObj));
 
         return responseObj;
     }

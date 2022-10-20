@@ -54,7 +54,7 @@ public class Main {
                 .createDefault(PRIVATE_CONFIG.getConfigOption("token"))
                 .setEventManager(new AnnotatedEventManager())
                 .addEventListeners(new UserCountCommand(), new DeckCountCommand(), new RankDeckCommand(), new WebsiteCommand(), new RankSongCommand())
-                .addEventListeners(new VerifyCommand())
+                .addEventListeners(new VerifyCommand(), new GetUserStatsCommand())
                 .setActivity(Activity.of(CONFIG.getConfigOption("activityType", Activity.ActivityType::valueOf), CONFIG.getConfigOption("activityText")))
                 .setStatus(CONFIG.getConfigOption("statusType", OnlineStatus::valueOf))
                 .build();
@@ -70,6 +70,7 @@ public class Main {
                     .addCommands(Commands.slash("verify", "Verifies your discord account to your elephant account")
                         .addOption(OptionType.STRING, "email", "Your email that you used to register for elephant", true)
                         .addOption(OptionType.STRING, "password", "Your password that you used to register for elephant", true))
+                    .addCommands(Commands.slash("user-stats", "Gets user stats (Must be verified with !verify to run)"))
                     .queue();
                 LOGGER.info("Created dev commands for guild " + g.getName());
                 //TODO Add slash commands to register for guilds only (much faster)

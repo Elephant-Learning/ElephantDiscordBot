@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import me.elephantsuite.request.Method;
 import me.elephantsuite.request.Request;
+import me.elephantsuite.util.ResponseUtils;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.SubscribeEvent;
 
@@ -31,6 +32,11 @@ public class RankDeckCommand {
         Request request = new Request("deck/getAll", Method.GET, null);
 
         JsonObject object = request.makeRequest();
+
+        if (ResponseUtils.isFailure(object)) {
+            event.getHook().editOriginal("Failure retrieving information!: " + ResponseUtils.getMessage(object)).queue();
+            return;
+        }
 
         JsonArray decks = object.get("context").getAsJsonObject().get("decks").getAsJsonArray();
 
@@ -71,6 +77,11 @@ public class RankDeckCommand {
             long userId = obj.get("authorId").getAsLong();
 
             JsonObject userObj = new Request("login/user?id=" + userId, Method.GET, null).makeRequest();
+
+            if (ResponseUtils.isFailure(userObj)) {
+                event.getHook().editOriginal("Failure retrieving information!: " + ResponseUtils.getMessage(userObj)).queue();
+                return;
+            }
 
             String fullName = userObj
                 .get("context")

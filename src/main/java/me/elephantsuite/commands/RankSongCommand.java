@@ -13,6 +13,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import me.elephantsuite.request.Method;
 import me.elephantsuite.request.Request;
+import me.elephantsuite.util.ResponseUtils;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.SubscribeEvent;
 
@@ -34,6 +35,11 @@ public class RankSongCommand {
 		Request request = new Request("login/userByName?name=&userId=1", Method.GET, null);
 
 		JsonObject obj = request.makeRequest();
+
+		if (ResponseUtils.isFailure(obj)) {
+			event.getHook().editOriginal("Failure retrieving information!: " + ResponseUtils.getMessage(obj)).queue();
+			return;
+		}
 
 		JsonObject ctx = obj.get("context").getAsJsonObject();
 
