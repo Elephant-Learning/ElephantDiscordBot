@@ -3,11 +3,7 @@ package me.elephantsuite;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import me.elephantsuite.commands.DeckCountCommand;
-import me.elephantsuite.commands.RankDeckCommand;
-import me.elephantsuite.commands.RankSongCommand;
-import me.elephantsuite.commands.UserCountCommand;
-import me.elephantsuite.commands.WebsiteCommand;
+import me.elephantsuite.commands.*;
 import me.elephantsuite.config.JsonConfigHandler;
 import me.elephantsuite.config.PropertiesHandler;
 import me.elephantsuite.util.JsonUtils;
@@ -58,6 +54,7 @@ public class Main {
                 .createDefault(PRIVATE_CONFIG.getConfigOption("token"))
                 .setEventManager(new AnnotatedEventManager())
                 .addEventListeners(new UserCountCommand(), new DeckCountCommand(), new RankDeckCommand(), new WebsiteCommand(), new RankSongCommand())
+                .addEventListeners(new VerifyCommand())
                 .setActivity(Activity.of(CONFIG.getConfigOption("activityType", Activity.ActivityType::valueOf), CONFIG.getConfigOption("activityText")))
                 .setStatus(CONFIG.getConfigOption("statusType", OnlineStatus::valueOf))
                 .build();

@@ -38,6 +38,7 @@ public class Request {
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .method(method.name(), JsonUtils.toBody(body))
+                .header("Content-Type", "application/json")
                 .uri(URI.create(BACKEND_PATH + this.path))
                 .build();
 
@@ -45,7 +46,11 @@ public class Request {
 
         Main.LOGGER.info("Made " + this.method.name() + " request to " + BACKEND_PATH + this.path + " with body: " + JsonUtils.objToString(this.body));
 
-        return JsonUtils.toJsonObj(response.body());
+        JsonObject responseObj = JsonUtils.toJsonObj(response.body());
+
+        Main.LOGGER.info("Response: " + JsonUtils.objToString(responseObj));
+
+        return responseObj;
     }
 
     public JsonObject getBody() {

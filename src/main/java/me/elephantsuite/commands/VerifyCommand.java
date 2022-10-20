@@ -1,6 +1,8 @@
 package me.elephantsuite.commands;
 
 import com.google.gson.JsonObject;
+import me.elephantsuite.Main;
+import me.elephantsuite.config.JsonConfigHandler;
 import me.elephantsuite.request.Method;
 import me.elephantsuite.request.Request;
 import me.elephantsuite.util.ResponseUtils;
@@ -39,12 +41,22 @@ public class VerifyCommand {
         JsonObject response = loginRequest.makeRequest();
 
         if (ResponseUtils.isFailure(response)) {
-            event.getHook().editOriginal("Invalid Password/Email!: `" + ResponseUtils.getMessage(response) + "`").queue();
+            event.getHook().editOriginal("An Error Occurred!: `" + ResponseUtils.getMessage(response) + "`").queue();
             return;
         }
 
-        long elephantId = response.get("context").getAsJsonObject().get("user")
+        JsonObject user = response.get("context").getAsJsonObject().get("user").getAsJsonObject();
 
+        long elephantId = user.get("id").getAsLong();
+
+        JsonConfigHandler handler = Main.USER_CONFIG_LISTS.get(event.getGuild().getId());
+
+        handler.addElephantDiscordUser(event.getUser().getId(), elephantId);
+        handler.reload();
+
+        Main.USER_CONFIG_LISTS.replace(event.getGuild().getId(), handler);
+
+        event.getHook().editOriginal("Linked " + event.getUser().getAsMention() +  " to ElephantUser `"  + user.get("fullName").getAsString() + "`").queue();
 
 
     }
