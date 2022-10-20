@@ -3,6 +3,7 @@ package me.elephantsuite.commands;
 import com.google.gson.JsonObject;
 import me.elephantsuite.request.Method;
 import me.elephantsuite.request.Request;
+import me.elephantsuite.util.ResponseUtils;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.SubscribeEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -23,6 +24,8 @@ public class VerifyCommand {
             return;
         }
 
+        event.deferReply().queue();
+
         String email = Objects.requireNonNull(event.getInteraction().getOption("email")).getAsString();
         String password = Objects.requireNonNull(event.getInteraction().getOption("password")).getAsString();
 
@@ -34,6 +37,14 @@ public class VerifyCommand {
         Request loginRequest = new Request("login", Method.POST, object);
 
         JsonObject response = loginRequest.makeRequest();
+
+        if (ResponseUtils.isFailure(response)) {
+            event.getHook().editOriginal("Invalid Password/Email!: `" + ResponseUtils.getMessage(response) + "`").queue();
+            return;
+        }
+
+        long elephantId = response.get("context").getAsJsonObject().get("user")
+
 
 
     }
