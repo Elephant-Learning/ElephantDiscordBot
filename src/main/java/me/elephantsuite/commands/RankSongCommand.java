@@ -1,11 +1,7 @@
 package me.elephantsuite.commands;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.google.gson.JsonArray;
@@ -79,11 +75,18 @@ public class RankSongCommand {
 		event.getHook().editOriginal(str).queue();
 	}
 
-	private static HashMap<String, Integer> sortValues(HashMap<String, Integer> map)
-	{
+	public static HashMap<String, Integer> sortValues(Map<String, Integer> map) {
 		List<Map.Entry<String, Integer>> list = new LinkedList<>(map.entrySet());
 
-		list.sort(Map.Entry.comparingByValue());
+		list.sort(Map.Entry.comparingByValue((o1, o2) -> {
+			if (o1 > o2) {
+				return -1;
+			} else if (o2 > o1) {
+				return 1;
+			}
+
+			return 0;
+		}));
 
 		HashMap<String, Integer> sortedHashMap = new LinkedHashMap<>();
 

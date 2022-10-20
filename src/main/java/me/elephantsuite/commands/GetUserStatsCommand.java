@@ -6,6 +6,7 @@ import me.elephantsuite.config.JsonConfigHandler;
 import me.elephantsuite.request.Method;
 import me.elephantsuite.request.Request;
 import me.elephantsuite.util.ResponseUtils;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.SubscribeEvent;
 
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class GetUserStatsCommand {
@@ -30,14 +32,16 @@ public class GetUserStatsCommand {
 
         JsonConfigHandler handler = Main.USER_CONFIG_LISTS.get(event.getGuild().getId());
 
-        if (!handler.hasElephantId(event.getUser().getIdLong())) {
-            event.reply("You have not verified yet! Do `/verify` to verify yourself!").queue();
+        User discordUser = Objects.requireNonNull(event.getOption("user")).getAsUser();
+
+        if (!handler.hasElephantId(discordUser.getIdLong())) {
+            event.reply(discordUser.getAsMention() + " has not verified yet! Do `/verify` to verify yourself!").queue();
             return;
         }
 
         event.deferReply().queue();
 
-        long elephantId = handler.getElephantId(event.getUser().getId());
+        long elephantId = handler.getElephantId(discordUser.getId());
 
         Request getUserInfo = new Request("login/user?id=" + elephantId, Method.GET, null);
 
@@ -107,7 +111,7 @@ public class GetUserStatsCommand {
 
         String decks = String.join("\n", numberedDecks);
 
-        String finalStr = event.getUser().getAsMention() + "'s user stats:\n" +
+        String finalStr = discordUser.getAsMention() + "'s user stats:\n" +
                 "Days Streak: " + daysStreak + "\n" +
                 "Usage Time: " + usageTime + "\n" +
                 "Last Logged In: " + lastLoggedIn.getMonth() + " " + lastLoggedIn.getDayOfMonth() + ", " + lastLoggedIn.getYear() + "\n" +

@@ -1,12 +1,8 @@
 package me.elephantsuite;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import me.elephantsuite.commands.*;
 import me.elephantsuite.config.JsonConfigHandler;
 import me.elephantsuite.config.PropertiesHandler;
-import me.elephantsuite.util.JsonUtils;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -41,7 +37,6 @@ public class Main {
             .setFileName("elephant-discord-bot")
             .build();
 
-    //TODO Add JSON User configs
    // public static final Map<String, PropertiesHandler> SERVER_CONFIG_LISTS = new HashMap<>();
     // not needed right now, uncomment for later possibly
 
@@ -54,7 +49,7 @@ public class Main {
                 .createDefault(PRIVATE_CONFIG.getConfigOption("token"))
                 .setEventManager(new AnnotatedEventManager())
                 .addEventListeners(new UserCountCommand(), new DeckCountCommand(), new RankDeckCommand(), new WebsiteCommand(), new RankSongCommand())
-                .addEventListeners(new VerifyCommand(), new GetUserStatsCommand())
+                .addEventListeners(new VerifyCommand(), new GetUserStatsCommand(), new UserGetDecksCommand())
                 .setActivity(Activity.of(CONFIG.getConfigOption("activityType", Activity.ActivityType::valueOf), CONFIG.getConfigOption("activityText")))
                 .setStatus(CONFIG.getConfigOption("statusType", OnlineStatus::valueOf))
                 .build();
@@ -70,7 +65,10 @@ public class Main {
                     .addCommands(Commands.slash("verify", "Verifies your discord account to your elephant account")
                         .addOption(OptionType.STRING, "email", "Your email that you used to register for elephant", true)
                         .addOption(OptionType.STRING, "password", "Your password that you used to register for elephant", true))
-                    .addCommands(Commands.slash("user-stats", "Gets user stats (Must be verified with !verify to run)"))
+                    .addCommands(Commands.slash("user-stats", "Gets user stats (Must be verified with /verify to run)")
+                        .addOption(OptionType.USER, "user", "User to get stats of", true))
+                    .addCommands(Commands.slash("get-deck", "Gets another user's decks (Must be verified with /verify to run)")
+                        .addOption(OptionType.USER, "user", "User to get decks of", true))
                     .queue();
                 LOGGER.info("Created dev commands for guild " + g.getName());
                 //TODO Add slash commands to register for guilds only (much faster)
