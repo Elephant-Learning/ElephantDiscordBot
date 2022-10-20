@@ -71,8 +71,8 @@ public class Main {
                     .addCommands(Commands.slash("rank-song", "Ranks songs in Elephant based on like total"))
                     .addCommands(Commands.slash("website", "Gives link to elephant website"))
                     .addCommands(Commands.slash("verify", "Verifies your discord account to your elephant account")
-                        .addOption(OptionType.STRING, "email", "Your email that you used to register for elephant")
-                        .addOption(OptionType.STRING, "password", "Your password that you used to register for elephant"))
+                        .addOption(OptionType.STRING, "email", "Your email that you used to register for elephant", true)
+                        .addOption(OptionType.STRING, "password", "Your password that you used to register for elephant", true))
                     .queue();
                 LOGGER.info("Created dev commands for guild " + g.getName());
                 //TODO Add slash commands to register for guilds only (much faster)
