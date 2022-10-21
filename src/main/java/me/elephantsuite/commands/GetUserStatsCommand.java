@@ -69,14 +69,7 @@ public class GetUserStatsCommand {
                 .stream()
                 .map(aLong -> {
                     try {
-                        JsonObject jsonObject = deckIdToDeck(aLong);
-
-                        if (ResponseUtils.isFailure(jsonObject)) {
-                            Main.LOGGER.error(ResponseUtils.getMessage(jsonObject));
-                            return null;
-                        }
-
-                        return jsonObject;
+                        return deckIdToDeck(aLong);
                     } catch (IOException | InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -122,7 +115,7 @@ public class GetUserStatsCommand {
 
     }
 
-    private static String getFullNameByUserId(long userId) throws IOException, InterruptedException {
+    public static String getFullNameByUserId(long userId) throws IOException, InterruptedException {
         Request request = new Request("login/user?id=" + userId, Method.GET, null);
 
         JsonObject object = request.makeRequest();
@@ -135,9 +128,16 @@ public class GetUserStatsCommand {
         return object.get("context").getAsJsonObject().get("user").getAsJsonObject().get("fullName").getAsString();
     }
 
-    private static JsonObject deckIdToDeck(long deckId) throws IOException, InterruptedException {
+    public static JsonObject deckIdToDeck(long deckId) throws IOException, InterruptedException {
         Request request = new Request("deck/get?id=" + deckId, Method.GET, null);
 
-        return request.makeRequest();
+        JsonObject obj = request.makeRequest();
+
+        if (ResponseUtils.isFailure(obj)) {
+            Main.LOGGER.error("Failure retrieving information!: " + ResponseUtils.getMessage(obj));
+            return null;
+        }
+
+        return obj;
     }
 }

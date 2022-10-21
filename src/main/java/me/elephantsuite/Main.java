@@ -49,7 +49,7 @@ public class Main {
                 .createDefault(PRIVATE_CONFIG.getConfigOption("token"))
                 .setEventManager(new AnnotatedEventManager())
                 .addEventListeners(new UserCountCommand(), new DeckCountCommand(), new RankDeckCommand(), new WebsiteCommand(), new RankSongCommand())
-                .addEventListeners(new VerifyCommand(), new GetUserStatsCommand(), new UserGetDecksCommand())
+                .addEventListeners(new VerifyCommand(), new GetUserStatsCommand(), new UserGetDecksCommand(), new GetUserFoldersCommand())
                 .setActivity(Activity.of(CONFIG.getConfigOption("activityType", Activity.ActivityType::valueOf), CONFIG.getConfigOption("activityText")))
                 .setStatus(CONFIG.getConfigOption("statusType", OnlineStatus::valueOf))
                 .build();
@@ -69,6 +69,8 @@ public class Main {
                         .addOption(OptionType.USER, "user", "User to get stats of", true))
                     .addCommands(Commands.slash("get-deck", "Gets another user's decks (Must be verified with /verify to run)")
                         .addOption(OptionType.USER, "user", "User to get decks of", true))
+                    .addCommands(Commands.slash("get-folder", "Gets user's folders")
+                        .addOption(OptionType.USER, "user", "User to get folders of"))
                     .queue();
                 LOGGER.info("Created dev commands for guild " + g.getName());
                 //TODO Add slash commands to register for guilds only (much faster)
