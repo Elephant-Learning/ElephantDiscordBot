@@ -84,7 +84,7 @@ public class GetUserFoldersCommand {
             sortedDecks = RankSongCommand.sortValues(sortedDecks);
 
             sortedDecks.forEach((s, integer) -> {
-                builder.append("\t").append(s).append("(`").append(integer).append("` Likes)").append("\n");
+                builder.append("\t-").append(s).append("(`").append(integer).append("` Likes)").append("\n");
             });
         }
 

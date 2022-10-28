@@ -49,7 +49,7 @@ public class Main {
                 .createDefault(PRIVATE_CONFIG.getConfigOption("token"))
                 .setEventManager(new AnnotatedEventManager())
                 .addEventListeners(new UserCountCommand(), new DeckCountCommand(), new RankDeckCommand(), new WebsiteCommand(), new RankSongCommand())
-                .addEventListeners(new VerifyCommand(), new GetUserStatsCommand(), new UserGetDecksCommand(), new GetUserFoldersCommand())
+                .addEventListeners(new VerifyCommand(), new GetUserStatsCommand(), new UserGetDecksCommand(), new GetUserFoldersCommand(), new FriendRequestCommand())
                 .setActivity(Activity.of(CONFIG.getConfigOption("activityType", Activity.ActivityType::valueOf), CONFIG.getConfigOption("activityText")))
                 .setStatus(CONFIG.getConfigOption("statusType", OnlineStatus::valueOf))
                 .build();
@@ -70,7 +70,11 @@ public class Main {
                     .addCommands(Commands.slash("get-deck", "Gets another user's decks (Must be verified with /verify to run)")
                         .addOption(OptionType.USER, "user", "User to get decks of", true))
                     .addCommands(Commands.slash("get-folder", "Gets user's folders")
-                        .addOption(OptionType.USER, "user", "User to get folders of"))
+                        .addOption(OptionType.USER, "user", "User to get folders of", true))
+                    .addCommands(Commands.slash("friend", "friend's another user based on user email or discord user")
+                        .addOption(OptionType.USER, "user", "discord user that is verified")
+                        .addOption(OptionType.STRING, "email", "email of user to send friend request too")
+                        .addOption(OptionType.STRING, "name", "Name of user to send email to, will confirm and then send request"))
                     .queue();
                 LOGGER.info("Created dev commands for guild " + g.getName());
                 //TODO Add slash commands to register for guilds only (much faster)

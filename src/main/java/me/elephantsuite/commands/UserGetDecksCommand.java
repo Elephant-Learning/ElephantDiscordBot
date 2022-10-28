@@ -45,9 +45,7 @@ public class UserGetDecksCommand {
 
         long elephantId = handler.getElephantId(discordUser.getId());
 
-        Request getUserInfo = new Request("login/user?id=" + elephantId, Method.GET, null);
-
-        JsonObject response = getUserInfo.makeRequest();
+        JsonObject response = Request.getUserInfo(elephantId);
 
         if (ResponseUtils.isFailure(response)) {
             event.getHook().editOriginal("Failure retrieving information!: " + ResponseUtils.getMessage(response)).queue();

@@ -64,4 +64,10 @@ public class Request {
     public Method getMethod() {
         return method;
     }
+
+    public static JsonObject getUserInfo(long elephantUserId) throws IOException, InterruptedException {
+        Request request = new Request("login/user?id=" + elephantUserId, Method.GET, null);
+
+        return request.makeRequest();
+    }
 }

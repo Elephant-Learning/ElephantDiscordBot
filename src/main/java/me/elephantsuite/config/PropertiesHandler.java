@@ -212,7 +212,7 @@ public class PropertiesHandler {
 
 			PropertiesHandler propertiesHandler = new PropertiesHandler(filename, configValues, serverConfig);
 			propertiesHandler.initialize();
-			System.out.println("Properties Handler with file name \"" + filename + "\" created on path \"" + propertiesHandler.propertiesPath + "\"");
+			Main.LOGGER.info("Properties Handler with file name \"" + filename + "\" created on path \"" + propertiesHandler.propertiesPath + "\"");
 			return propertiesHandler;
 		}
 	}
